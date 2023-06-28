@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # 定义文件夹路径
 source_folder = "/home/tianyu/Desktop/MedicalDataBase/Task98_testSec/imagesTr"
 bbox_folder = "/home/tianyu/Desktop/labelTr_bbox"
-output_folder = "/home/tianyu/Desktop/imagesTr_cropped"
+output_folder = "/home/tianyu/Desktop/imagesTr_cropped2"
 
 # for filename in os.listdir(source_folder):
 #     if filename.endswith(".nii.gz"):
@@ -34,8 +34,10 @@ output_folder = "/home/tianyu/Desktop/imagesTr_cropped"
 #         print(filename)
 
 # 指定你要遍历的目录
-directory = '/home/tianyu/Desktop/tmp2'
+directory = '/home/tianyu/Desktop/MedicalDataBase/Task98_testSec/labelsTr'
 directory2 = '/home/tianyu/Desktop/labelTr_bbox0'
+data_dir = '/home/tianyu/Desktop/MedicalDataBase/Task98_testSec/imagesTr'
+mask_dir = '/home/tianyu/Desktop/MedicalDataBase/Task98_testSec/labelsTr'
 
 expand_margin = 5
 
@@ -89,7 +91,10 @@ for filename in sorted(os.listdir(directory)):
         # 创建一个新的 mask
         # new_mask = np.zeros(mask.shape)
         # new_mask[xmin:xmax + 1, ymin:ymax + 1, zmin:zmax + 1] = 1
-        new_mask = image_data[xmin:xmax + 1, ymin:ymax + 1, zmin:zmax + 1]
+        new_mask = mask[xmin:xmax + 1, ymin:ymax + 1, zmin:zmax + 1]
+        new_image = image_data[xmin:xmax + 1, ymin:ymax + 1, zmin:zmax + 1]
+        new_image = new_image * new_mask
+
 
         # 保存新的 mask 为 .nii.gz 文件
         new_img = nib.Nifti1Image(new_mask, image_nib.affine, image_nib.header)
@@ -98,17 +103,3 @@ for filename in sorted(os.listdir(directory)):
         nib.save(new_img, new_filepath)
 
         print(f'Processed {filename}')
-
-aver_x = sum_x/100
-aver_y = sum_y/100
-aver_z = sum_z/100
-
-print(aver_x)
-print(aver_y)
-print(aver_z)
-
-sns.boxplot(vector_x)
-plt.xlabel('Value')
-plt.ylabel('Distribution')
-plt.title('Box Plot')
-plt.show()
